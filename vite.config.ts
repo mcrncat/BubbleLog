@@ -7,7 +7,8 @@ import svgr from 'vite-plugin-svgr'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "/",
+//   base: "/",
+  base: "/BubbleLog/",
 	root: "src",
 	plugins: [
 		react(),
