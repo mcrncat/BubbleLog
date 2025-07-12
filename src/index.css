@@ -1,11 +1,1 @@
 @import "tailwindcss";
-
-@layer utilities {
-  @keyframes pan-right {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(-100px, 0); }
-  }
-  .animate-pan-right {
-    animation: pan-right 30s linear infinite;
-  }
-}

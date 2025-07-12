@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react-swc'
 
 import { resolve } from "node:path";
 import tailwindcss from '@tailwindcss/vite'
+import svgr from 'vite-plugin-svgr'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -10,21 +11,22 @@ export default defineConfig({
 	root: "src",
 	plugins: [
 		react(),
-		tailwindcss()
+		tailwindcss(),
+		svgr()
 	],
 	publicDir: resolve(__dirname, "public"),
 	build: {
-		// distƒtƒHƒ‹ƒ_‚Éo—Í
+		// distï¿½tï¿½Hï¿½ï¿½ï¿½_ï¿½Éoï¿½ï¿½
 		outDir: resolve(__dirname, "dist"),
-		// ‘¶İ‚µ‚È‚¢‚Æ‚«‚ÍƒtƒHƒ‹ƒ_‚ğì¬‚·‚é
+		// ï¿½ï¿½ï¿½İ‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ï¿½Íƒtï¿½Hï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ì¬ï¿½ï¿½ï¿½ï¿½
 		emptyOutDir: true,
 		copyPublicDir: true,
 		rollupOptions: {
-			// entry point‚ª‚ ‚éindex.html‚ÌƒpƒX
+			// entry pointï¿½ï¿½ï¿½ï¿½ï¿½ï¿½index.htmlï¿½Ìƒpï¿½X
 			input: {
 				"": resolve(__dirname, "./src/index.html"),
 			},
-			// bundle.js‚ğ·‚µ‘Ö‚¦‚·‚é
+			// bundle.jsï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö‚ï¿½ï¿½ï¿½ï¿½ï¿½
 			output: {
 				entryFileNames: "assets/bundle.js",
 			},

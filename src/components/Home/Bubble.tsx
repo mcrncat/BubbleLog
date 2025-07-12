@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion'
+import { motion, useAnimationFrame, useMotionValue } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { useMemo, useRef, useState } from 'react'
 
@@ -14,33 +14,45 @@ interface BubbleProps {
 export default function Bubble({
   size = 100,
   duration = 8,
-  delay = 0,
+  // delay = 0,
   label = '',
   to = '/',
   interactive = true,
 }: BubbleProps) {
-  const navigate = useNavigate()
+ const navigate = useNavigate()
   const bubbleRef = useRef<HTMLDivElement>(null)
-
   const [isPopped, setIsPopped] = useState(false)
   const [popPosition, setPopPosition] = useState<{ x: number; y: number } | null>(null)
+  const [isHovered, setIsHovered] = useState(false)
 
-  // â°à íuÇÕíÜâõïtãﬂÅi50vwÅ}10vwÇÃÉâÉìÉ_ÉÄÅj
-  const baseLeft = useMemo(() => {
-    const center = 50
-    const spread = 10
-    const offset = (Math.random() * 2 - 1) * spread
-    return center + offset
-  }, [])
+  // ÂàùÊúü‰ΩçÁΩÆ„ÇíuseMemo„ÅßÁîüÊàê„ÅóÂàùÂõû„Åã„Çâ„É©„É≥„ÉÄ„É†„Å´
+  const initialX = useMemo(() => Math.random() * window.innerWidth, [])
+  const initialY = useMemo(() => window.innerHeight + Math.random() * 400, [])
+
+  // MotionValues„ÅßÂ∫ßÊ®ôÁÆ°ÁêÜ
+  const x = useMotionValue(initialX)
+  const y = useMotionValue(initialY)
+
+  // ‰∏äÊòá„Ç¢„Éã„É°„Éº„Ç∑„Éß„É≥Ôºà„Éõ„Éê„ÉºÊôÇ„ÅØÂÅúÊ≠¢Ôºâ
+  useAnimationFrame((_t, delta) => {
+  if (!isHovered && !isPopped) {
+    const speed = (window.innerHeight + 200) / (duration * 1000)
+    let newY = y.get() - speed * delta
+    if (newY < -200) {
+      newY = window.innerHeight + Math.random() * 200
+      const newX = Math.random() * window.innerWidth
+      x.set(newX)  // XÂ∫ßÊ®ô„ÇÇ„É©„É≥„ÉÄ„É†„Å´„É™„Çª„ÉÉ„Éà
+    }
+    y.set(newY)
+  }
+})
 
   const handleClick = () => {
     if (!interactive || isPopped) return
-
     const rect = bubbleRef.current?.getBoundingClientRect()
     if (rect) {
       setPopPosition({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 })
     }
-
     setIsPopped(true)
     setTimeout(() => {
       if (to) navigate(to)
@@ -52,13 +64,13 @@ export default function Bubble({
     return Array.from({ length: 8 }).map((_, i) => {
       const angle = (i / 8) * Math.PI * 2
       const distance = 40
-      const x = Math.cos(angle) * distance
-      const y = Math.sin(angle) * distance
+      const px = Math.cos(angle) * distance
+      const py = Math.sin(angle) * distance
       return (
         <motion.div
           key={i}
           initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
-          animate={{ x, y, opacity: 0, scale: 0.5 }}
+          animate={{ x: px, y: py, opacity: 0, scale: 0.5 }}
           transition={{ duration: 0.5 }}
           className="absolute rounded-full bg-blue-300/60"
           style={{
@@ -80,52 +92,47 @@ export default function Bubble({
   }
 
   return (
-    <motion.div
-      ref={bubbleRef}
-      onClick={handleClick}
-      initial={{
-        y: '100vh', // âÊñ â∫Ç©ÇÁÉXÉ^Å[Ég
-        opacity: 1,
-        scale: 1,
-      }}
-      animate={{
-        y: ['100vh', '-20vh'], // è„Ç…à⁄ìÆ
-        x: [
-          `${baseLeft}vw`,
-          `${baseLeft + 5}vw`,
-          `${baseLeft - 5}vw`,
-          `${baseLeft + 4}vw`,
-          `${baseLeft - 4}vw`,
-          `${baseLeft}vw`,
-        ], // ç∂âEÇ…óhÇÍÇ»Ç™ÇÁà⁄ìÆ
-        opacity: [0.8, 0],
-        scale: [1, 1.2],
-      }}
-      transition={{
-        duration,
-        delay,
-        ease: 'easeInOut',
-        repeat: Infinity,
-        repeatType: 'loop',
-        repeatDelay: 2,
-      }}
-      className={`absolute flex items-center justify-center rounded-full shadow-[0_0_15px_rgba(0,50,100,0.7)] ${
-        interactive ? 'cursor-pointer' : ''
-      }`}
-      style={{
-        width: size,
-        height: size,
-        left: 0, // leftÇÕ0Ç…ÇµÇƒxÇÃílÇ≈à íuí≤êÆÅivwéwíËÇ»ÇÃÇ≈Åj
-        background:
-          'linear-gradient(135deg, rgba(100,180,255,0.4), rgba(50,120,200,0.25), rgba(80,150,230,0.1))',
-        boxShadow:
-          'inset 0 0 15px 5px rgba(150,210,255,0.6), 0 6px 10px rgba(0,30,80,0.8)',
-        color: 'white',
-      }}
-    >
-      {interactive && (
-        <span className="select-none font-semibold text-white text-sm">{label}</span>
+    <>
+      <motion.div
+        ref={bubbleRef}
+        onClick={handleClick}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className={`absolute flex items-center justify-center rounded-full shadow-[0_0_15px_rgba(0,50,100,0.7)] ${
+          interactive ? 'cursor-pointer' : ''
+        }`}
+        style={{
+          width: size,
+          height: size,
+          background:
+            'linear-gradient(135deg, rgba(100,180,255,0.4), rgba(50,120,200,0.25), rgba(80,150,230,0.1))',
+          boxShadow:
+            'inset 0 0 15px 5px rgba(150,210,255,0.6), 0 6px 10px rgba(0,30,80,0.8)',
+          color: 'white',
+          x,
+          y,
+        }}
+      >
+        {interactive && (
+          <span className="select-none font-semibold text-white text-sm">{label}</span>
+        )}
+      </motion.div>
+
+      {isHovered && (
+        <div
+          className="fixed px-2 py-1 text-xs text-white bg-black/70 rounded shadow"
+          style={{
+            top: y.get() - 30,
+            left: x.get(),
+            transform: 'translate(-50%, -100%)',
+            whiteSpace: 'nowrap',
+            pointerEvents: 'none',
+            zIndex: 50,
+          }}
+        >
+          {label}„Éö„Éº„Ç∏„Å∏
+        </div>
       )}
-    </motion.div>
+    </>
   )
 }

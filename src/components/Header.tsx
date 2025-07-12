@@ -1,31 +1,23 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
-import logo from '../assets/logo.jpg'
-import avatar from '../assets/avatar.png'
+// import logo from '../assets/logo.jpg'
+// import avatar from '../assets/avatar.png'
+import { navItems } from '../data/navItem'
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
 
   const toggleMenu = () => setIsOpen(!isOpen)
 
-  const navItems = [
-    { name: 'Home', to: '/' },
-    { name: 'Docs', to: '/docs' },
-    { name: 'About', to: '/about' },
-    { name: 'Contact', to: '/contact' },
-  ]
-
   return (
     <header className="bg-white shadow-md fixed top-0 left-0 w-full z-50">
   <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-    {/* 左側：ロゴとタイトル */}
     <Link to="/" className="flex items-center space-x-2">
-      <img src={logo} alt="Logo" className="w-8 h-8" />
-      <span className="text-xl font-bold text-blue-600">MyPortfolio</span>
+      {/* <img src={logo} alt="Logo" className="w-8 h-8" /> */}
+      <span className="text-xl font-bold text-blue-600">BubbleLog</span>
     </Link>
 
-    {/* 右側：ナビゲーションとアバター（PC） */}
     <nav className="hidden md:flex items-center space-x-8">
       {navItems.map((item) => (
         <Link
@@ -36,14 +28,14 @@ export default function Header() {
           {item.name}
         </Link>
       ))}
-      <img
+      {/* <img
         src={avatar}
         alt="Profile"
         className="w-8 h-8 rounded-full border border-gray-300"
-      />
+      /> */}
     </nav>
 
-    {/* ハンバーガーボタン（モバイル） */}
+
     <button
       onClick={toggleMenu}
       className="md:hidden text-gray-700 focus:outline-none"
@@ -52,7 +44,6 @@ export default function Header() {
     </button>
   </div>
 
-  {/* モバイルメニュー */}
   {isOpen && (
     <div className="md:hidden bg-white px-6 py-4 space-y-3 shadow">
       {navItems.map((item) => (
@@ -65,14 +56,14 @@ export default function Header() {
           {item.name}
         </Link>
       ))}
-      <div className="pt-3 border-t flex items-center space-x-2">
+      {/* <div className="pt-3 border-t flex items-center space-x-2">
         <img
           src={avatar}
           alt="Profile"
           className="w-8 h-8 rounded-full border border-gray-300"
         />
-        <span className="text-gray-700 font-medium">あなたの名前</span>
-      </div>
+        <span className="text-gray-700 font-medium"></span>
+      </div> */}
     </div>
   )}
 </header>

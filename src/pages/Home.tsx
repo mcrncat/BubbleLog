@@ -2,6 +2,8 @@ import StarfieldBackground from '../components/StarfieldBackground'
 import Header from '../components/Header'
 import Bubble from '../components/Home/Bubble'
 import { bubbleData } from '../data/bubbleData'
+import BubbleGenerator from '../components/Home/BubbleGenerator'
+
 
 export default function Home() {
   return (
@@ -9,9 +11,9 @@ export default function Home() {
       <StarfieldBackground />
 
       <Header />
-
+      <BubbleGenerator />
+      
       <div className="absolute inset-0 z-10">
-        {/* 飾りバブル・メインバブルの描画 */}
         {bubbleData.map((bubble, i) => (
           <Bubble key={i} {...bubble} />
         ))}
