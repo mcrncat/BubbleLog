@@ -1,6 +1,6 @@
 import Header from '../components/Header'
 import StarfieldBackground from '../components/StarfieldBackground'
-import { motion, easeInOut, easeOut } from 'framer-motion'
+import { motion, easeInOut } from 'framer-motion'
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 30 },
