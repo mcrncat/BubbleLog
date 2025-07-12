@@ -1,14 +1,48 @@
-const Docs = () => {
-    return (
-      <div className="p-8">
-        <h1 className="text-2xl font-bold">¡Œã‚Ì—\’è</h1>
-        <ul className="mt-4 list-disc list-inside">
-          <li>TypeScript‚ÌƒWƒFƒlƒŠƒNƒX‚ğŠw‚Ô</li>
-          <li>React Hook Form‚ÅƒtƒH[ƒ€ì¬</li>
-          <li>©ìƒuƒƒO‹@”\‚ğì‚Á‚Ä‚İ‚é</li>
+import { useState } from 'react'
+
+const categories = {
+  è¨€èª: ['JavaScript', 'TypeScript', 'Python', 'PHP'],
+  ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯: ['React', 'Vue', 'Laravel'],
+  ãƒ„ãƒ¼ãƒ«: ['Docker', 'Git', 'VSCode'],
+}
+
+export default function Docs() {
+  const [selectedCategory, setSelectedCategory] = useState<keyof typeof categories>('è¨€èª')
+
+  return (
+    <div className="flex min-h-screen bg-black text-white">
+      {/* å·¦ã‚«ãƒ©ãƒ ï¼ˆå¤§ãƒ¡ãƒ‹ãƒ¥ãƒ¼ï¼‰ */}
+      <aside className="w-1/4 p-4 border-r border-white/20">
+        <h2 className="text-xl font-bold mb-4">ã‚«ãƒ†ã‚´ãƒª</h2>
+        <ul className="space-y-2">
+          {Object.keys(categories).map((cat) => (
+            <li
+              key={cat}
+              className={`cursor-pointer hover:text-blue-400 ${
+                selectedCategory === cat ? 'font-bold text-blue-300' : ''
+              }`}
+              onClick={() => setSelectedCategory(cat as keyof typeof categories)}
+            >
+              {cat}
+            </li>
+          ))}
         </ul>
-      </div>
-    );
-  };
-  
-  export default Docs;
+      </aside>
+
+      {/* å³ã‚«ãƒ©ãƒ ï¼ˆä¸­ãƒ¡ãƒ‹ãƒ¥ãƒ¼ï¼‰ */}
+      <section className="flex-1 p-6">
+        <h2 className="text-xl font-semibold mb-4">{selectedCategory} ã®ãƒ¡ãƒ¢</h2>
+        <ul className="grid grid-cols-2 gap-4">
+          {categories[selectedCategory].map((item) => (
+            <li
+              key={item}
+              className="bg-white/10 backdrop-blur border border-white/20 p-4 rounded-lg shadow hover:bg-white/20 transition cursor-pointer"
+            >
+              {item}
+            </li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  )
+}
